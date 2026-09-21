@@ -1,6 +1,6 @@
 ---
 status: current
-last_reviewed: 2026-09-03
+last_reviewed: 2026-09-08
 ---
 
 # Use in CI
@@ -155,7 +155,7 @@ it) CI/CD variables, the same way you would for any other credential.
 
 `internetnl submit`/`poll`/`results` return one of these exit codes
 (the full table is in
-[`openspec/changes/add-internetnl-cli/design.md`](../../openspec/changes/add-internetnl-cli/design.md#exit-codes)):
+[`openspec/changes/archive/2026-09-08-add-internetnl-cli/design.md`](../../openspec/changes/archive/2026-09-08-add-internetnl-cli/design.md#exit-codes)):
 
 | Code | Meaning |
 |---|---|
@@ -212,8 +212,10 @@ passing — a gap in the response is not silent success.
 
 ## d) The rule
 
-**Only measure hosts you operate or have explicit permission to
-test.** This applies in CI exactly as it does on a laptop: a workflow
+**Measure your own hosts freely; measure someone else's only where the
+measurement is one their operator already invites** (see "The rule" in the
+[README](../../README.md)). In CI the second half barely applies and the
+first half matters more than anywhere else: a workflow
 that runs on every pull request from outside contributors, or that
 lets a PR body or branch name influence which hosts get submitted, can
 turn "scan my own site" into "scan whatever a stranger asks for." The

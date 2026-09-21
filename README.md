@@ -10,7 +10,7 @@ until the run finishes, and renders the result as a diffable table or as JSON
 for pipelines.
 
 > **Status:** implemented. The user-visible surface stays pinned in
-> [`openspec/changes/add-internetnl-cli/design.md`](openspec/changes/add-internetnl-cli/design.md);
+> [`openspec/changes/archive/2026-09-08-add-internetnl-cli/design.md`](openspec/changes/archive/2026-09-08-add-internetnl-cli/design.md);
 > the commands below match the current behaviour.
 
 **New here?** See the illustrated
@@ -19,17 +19,37 @@ for pipelines.
 [**internetnl-cli-demo**](https://github.com/MWest2020/internetnl-cli-demo)
 (quickstart + example hosts + CI-gate example).
 
-**Try it live, no account needed:**
+**Try it in your browser, no account needed:**
 [**https://mwest2020.github.io/internetnl-cli-demo/**](https://mwest2020.github.io/internetnl-cli-demo/)
-— type a domain, get a real result, one run at a time (strictly
-rate-limited; see [docs/reference/demo-api.md](docs/reference/demo-api.md)
-for the contract that page relies on and
-[docs/how-to/demo-run.md](docs/how-to/demo-run.md) for how it is run).
+— type a domain, get a real result from the same v1.0.0 service every
+tenant uses, one run at a time (strictly rate-limited; see
+[docs/reference/demo-api.md](docs/reference/demo-api.md) for the contract
+that page relies on and [docs/how-to/demo-run.md](docs/how-to/demo-run.md)
+for how it is run).
 
 ## The rule
 
-**Only measure hosts you operate or have explicit permission to test.**
-The tool does not enforce this; you do.
+**Measure your own hosts freely. Measure someone else's only where the
+measurement is one their operator already invites.**
+
+Internet.nl is a public service whose own website invites anyone to test any
+domain, and the Dutch government publishes a twice-yearly measurement of some
+12,000 government domains, per domain, by name. A single run against a domain
+that already sits in that category stays inside the norm the service itself
+sets. A run against a domain that does not, without asking, does not.
+
+The rest is on you, and the tool enforces none of it:
+
+- **Once, not repeatedly.** A batch run costs the measured host real work —
+  DNS lookups, TLS handshakes, connection attempts. One run answers your
+  question. A loop is abuse, whoever owns the domain.
+- **A verdict is not an audit.** Batch results differ from the website's in
+  [documented ways](#batch-results-are-not-website-results). Never present a
+  score about someone else's domain as a finding about their security.
+- **Aggregate, don't shame.** If you measure a whole sector, publish what
+  most often goes wrong and how to fix it — not a ranking of who scored
+  worst. The first is useful to everyone; the second only burns the
+  relationship you presumably wanted.
 
 ## Quickstart
 
@@ -63,8 +83,9 @@ Every endpoint needs one, and there are three routes:
 3. **Your own instance** — see [Self-hosting](#self-hosting) below.
 
 No credential at all is needed to try the tool: the
-[live demo](https://mwest2020.github.io/internetnl-cli-demo/) runs one domain
-at a time against the same facade, anonymously.
+[browser page](https://mwest2020.github.io/internetnl-cli-demo/) runs one
+domain at a time against the same facade, anonymously — the same service,
+not a scaled-down imitation of it.
 
 ## What it is, and is not
 
@@ -93,7 +114,7 @@ score" without naming the endpoint — which is why every result is labelled.
 ## Configuration
 
 Everything is environment-tunable; see
-[`openspec/changes/add-internetnl-cli/design.md`](openspec/changes/add-internetnl-cli/design.md)
+[`openspec/changes/archive/2026-09-08-add-internetnl-cli/design.md`](openspec/changes/archive/2026-09-08-add-internetnl-cli/design.md)
 for the full table (`INTERNETNL_ENDPOINT`, `INTERNETNL_USERNAME`,
 `INTERNETNL_PASSWORD`, timeouts, poll interval and maximum, batch size,
 config path). `INTERNETNL_CREDENTIAL` is a single `username:password`

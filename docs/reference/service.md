@@ -1,6 +1,6 @@
 ---
 status: current
-last_reviewed: 2026-09-05
+last_reviewed: 2026-09-08
 ---
 
 # The netnl service: endpoint, terms, limits, retention
@@ -29,11 +29,23 @@ not to this facade.
 
 ## Terms
 
-**Only measure hosts you operate, or have explicit permission to test.** A
-measurement makes the upstream instance connect to the target from the
-outside; running it against someone else's domain is scanning a system you
-do not own. This is the single condition every credential is issued under,
-and the ground for revoking one.
+**Measure your own hosts freely. Measure someone else's only where the
+measurement is one their operator already invites — and then only once.**
+
+A measurement makes the upstream instance connect to the target from the
+outside, from this operator's address. That is why the second half is
+narrower here than the tool's own rule: what a tenant does lands on
+infrastructure someone else pays for and answers for.
+
+"Already invites" means the domain sits in a category that is publicly and
+routinely measured this way — Dutch government domains, for instance, which
+the government measures twice a year and publishes per domain. It does not
+mean "is reachable over the internet".
+
+Repeated or scheduled measurement of a domain you do not operate is out of
+bounds regardless, as is presenting a batch verdict about someone else's
+domain as an audit finding. These are the conditions every credential is
+issued under, and the ground for revoking one.
 
 Credentials are per tenant, issued by hand (`netnl-admin user add`) or
 automatically on a qualifying donation (see
@@ -71,10 +83,18 @@ facade: your neighbour's busy hour does not spend your budget.
 | Submissions per hour, per tenant | 10 | `NETNL_RATE_LIMIT` |
 | Domains per request | 500 | `NETNL_MAX_DOMAINS` |
 | Concurrent runs, per tenant | 2 | `NETNL_MAX_CONCURRENT` |
-| Demo: requests per hour | 6 | `NETNL_DEMO_MAX_PER_HOUR` |
-| Demo: concurrent runs | 2 | `NETNL_DEMO_MAX_CONCURRENT` |
-| Demo: requests per IP per hour | 2 | `NETNL_DEMO_PER_IP_PER_HOUR` |
-| Demo: polls per IP per hour | 120 | `NETNL_DEMO_POLLS_PER_IP_PER_HOUR` |
+| Anonymous page: requests per hour | 6 | `NETNL_DEMO_MAX_PER_HOUR` |
+| Anonymous page: concurrent runs | 2 | `NETNL_DEMO_MAX_CONCURRENT` |
+| Anonymous page: requests per IP per hour | 2 | `NETNL_DEMO_PER_IP_PER_HOUR` |
+| Anonymous page: polls per IP per hour | 120 | `NETNL_DEMO_POLLS_PER_IP_PER_HOUR` |
+
+The browser page at
+<https://mwest2020.github.io/internetnl-cli-demo/> is not a demonstration
+version: it is this service, at v1.0.0, measuring for real against the same
+upstream instance, with an anonymous credential and tighter bounds. Nothing
+a visitor receives calls it a demo. The `NETNL_DEMO_*` variable names and
+the `/demo/*` routes are the historical spelling and still on the wire —
+renaming them means changing the browser page in the same release.
 | Supporter keys minted per hour | 20 | `NETNL_SUPPORTER_MAX_PER_HOUR` |
 | Delivery attempts per supporter key | 3 | `NETNL_SUPPORTER_MAX_ATTEMPTS` |
 
@@ -82,7 +102,8 @@ facade: your neighbour's busy hour does not spend your budget.
 
 There is **no facade-wide ceiling**: the limits above are per credential, so
 the total work in flight is `2 × active tenants`, plus at most 2 for the
-demo. One facade process (a single replica over one SQLite file) serialises
+anonymous browser page. One facade process (a single replica over one
+SQLite file) serialises
 the bookkeeping, but not the measurements themselves.
 
 Behind it all sits **one upstream batch instance**, and its own capacity has
@@ -95,7 +116,7 @@ lower per-tenant numbers.
 
 The concurrency ceiling is the one that matters: there is a single upstream
 batch instance behind this facade, and it is the scarce resource. Everything
-else is a fair-use bound so one tenant — or the anonymous demo — cannot take
+else is a fair-use bound so one tenant — or the anonymous page — cannot take
 it all.
 
 ### What happens when you hit one
@@ -123,7 +144,7 @@ is noticed, and you are not refused on stale bookkeeping.
 | What | Window | Variable |
 |---|---|---|
 | Tenant results | 7 days | `NETNL_RESULT_RETENTION_DAYS` |
-| Demo results | 24 hours | `NETNL_DEMO_RETENTION_HOURS` |
+| Anonymous-page results | 24 hours | `NETNL_DEMO_RETENTION_HOURS` |
 | Audit records | 90 days | `NETNL_AUDIT_RETENTION_DAYS` |
 
 Windows are applied by `netnl-admin prune`, which runs on a cron; the cron

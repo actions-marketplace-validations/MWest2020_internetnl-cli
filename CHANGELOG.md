@@ -6,13 +6,27 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Changed
+
+- Nothing a user receives calls this a demo any more. The four
+  visitor-facing literals on the anonymous browser surface now name the
+  service ("the service is busy right now", "the service is temporarily
+  unavailable", "too many runs recently from this network"), the credential
+  mail says "Try it in your browser" instead of "Live demo", and the README,
+  docs index, service reference and page contract describe the browser page
+  as what it is: this service at v1.0.0, measuring for real against the same
+  upstream instance, with an anonymous credential and tighter bounds — not a
+  scaled-down imitation. The `/demo/*` routes, the `demo-unavailable` code
+  and the `NETNL_DEMO_*` variables keep their historical spelling for now;
+  renaming those means changing the browser page in the same release.
+
 ## [1.0.0] - 2026-09-05
 
 First tagged release, cut so the bundled GitHub Action can be published to
 the GitHub Marketplace and referenced by a stable tag (`@v1`) instead of
 `@main`. The user-visible surface — commands, flags, environment variables
 and exit codes — is the one pinned in
-`openspec/changes/add-internetnl-cli/design.md` and stays stable within 1.x.
+`openspec/changes/archive/2026-09-08-add-internetnl-cli/design.md` and stays stable within 1.x.
 
 ### Added
 
@@ -336,7 +350,7 @@ and exit codes — is the one pinned in
 - Habitat onboarding: role definitions (`.claude/agents/`), role skills
   (`.claude/skills/`) and the builder Stop-gate `scripts/verify.sh` — the
   CLI itself is built through the habitat agent chain.
-- `openspec/changes/add-internetnl-cli/design.md` pinning the CLI surface:
+- `openspec/changes/archive/2026-09-08-add-internetnl-cli/design.md` pinning the CLI surface:
   environment variables, commands, exit codes, gating semantics and output
   shape.
 - OpenSpec change `add-internetnl-cli` (proposal, tasks, spec deltas) — the
